@@ -3,52 +3,41 @@
 #include <vector>
 #include<algorithm>
 using namespace std;
-bool compare(pair<int, double>a, pair<int, double>b) {
-    if (a.second != b.second) {
-        return a.second > b.second;
+
+int* arr;
+int n, x;
+int binary_search_l(int s, int l,int tg){
+    if (s > l) {
+        return -1;
     }
-    else {
-        return a.first < b.first;
-    }
-}
-vector<int> solution(int N, vector<int> stages) {
-    vector<int> answer;
-    vector<pair<int, double>>rate;
-    int pre = 0;
-    sort(stages.begin(), stages.end());
-    for (int i = 1; i <= N; i++) {
-        int jin = 0; int a = stages.size(); int c = stages.size();
-        for (int j = pre; j < stages.size(); j++) {
-            if (jin == 0 && i <= stages[j]) {
-                a = j;
-                jin = 1;
-            }
-            if (i < stages[j]) {
-                c = j;
-                
-                break;
-            }
-            
-        }
-        if (a != stages.size()) {
-            double r = (double)(c - a) / (stages.size() - a);
-            rate.push_back(make_pair(i, r));
+    int mid = (s + l) / 2;
+    if (arr[mid] == tg) {
+        if (mid == 0||arr[mid-1]!=tg) {
+            return mid;
         }
         else {
-            rate.push_back(make_pair(i, 0));
+            return binary_search_l(s, mid - 1,tg);
         }
-        
     }
-    sort(rate.begin(), rate.end(), compare);
-    for (auto it : rate) {
-        answer.push_back(it.first);
+    else if (arr[mid] < tg) {
+        return binary_search_l(mid+1, l, tg);
     }
-    return answer;
+    else {
+        return binary_search_l(s, mid - 1, tg);
+    }
 }
-
+int binary_search_r(int s, int l, int tg) {
+    return 0;
+}
 int main() {
-    vector<int>arr = { 4,4,4,4,4};
-    for (auto it : solution(4, arr)) {
-        cout << it;
+    
+    
+    cin >> n >> x;
+    arr = new int[n];
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
     }
+    int left = binary_search_l(0, n - 1, x);
+    int right = binary_search_r(0, n - 1, x);
+    
 }
