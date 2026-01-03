@@ -12,34 +12,45 @@
 #include <unordered_map>
 
 using namespace std;
-
-string solution(string number, int k) {
-    string answer = "";
-    stack<char> st;
-
-    for (char c : number) {
-        
-        while (!st.empty() && k > 0 && st.top() < c) {
-            st.pop();
-            k--;
+/*이 코드는 너무 조건을 덕지덕지*/
+//int solution(vector<int> people, int limit) {
+//    int answer = 0;
+//    sort(people.begin(), people.end());
+//    int st = 0;
+//    int n = people.size();
+//    int ls = n - 1;
+//    while (st <= ls) {
+//        // 여기서도 조건 확인해주기 (st<ls)
+//        while (st<ls&&people[st] + people[ls] > limit) {
+//            answer++;
+//            ls--;
+//        }
+//        ls--;
+//        st++;
+//        answer++;
+//    }
+//    return answer;
+//}
+int solution(vector<int> people, int limit) {
+    int answer = 0;
+    sort(people.begin(), people.end());
+    int st = 0;
+    int n = people.size();
+    int ls = n - 1;
+    while (st <= ls) {
+        if (people[st] + people[ls] <= limit) {
+            st++;
         }
-        st.push(c);
+        ls--;
+        answer++;
+        
     }
-    while (k-- > 0) st.pop();
-
-
-    while (!st.empty()) {
-        answer = st.top() + answer; 
-        st.pop();
-    }
-
     return answer;
 }
-
 int main() {
-    vector<int>arr = { 2,4};
+    vector<int>arr = { 40, 50, 60 };
     vector<int>arr1 = { 3,5};
     string str = "4177252841";
-    string s = solution(str,4);
+    int s = solution(arr,100);
     cout << s;
 }
