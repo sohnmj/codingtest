@@ -9,50 +9,56 @@
 #include<cmath>
 #include<set>
 #include <unordered_map>
-/*문제의 설명을 너무 대충 읽는 거 같다 오른쪽과 아래쪽으로만 가야 되는 조건을 읽었다면 더 빨리 풀었을 것 같다.
-나중에 보니 현재 위치에 도달할 수 있는 이전의 위치라면 항상 최단거리라는 것을 알게 되었고 
-그러면 현재코드에서 dp[i][j][0]값과 이 값을 이용한 비교는 의미가 없는 내용이기에 뺴도 될 것 같다.*/
+/*한번에 풀어서 기분이 좋다 단순한 그래프 탐색 문제인데 인접 노드 약간 꼬아서 낸 문제인 것 같다*/
 using namespace std;
-int solution(int m, int n, vector<vector<int>> puddles) {
-    int answer = 0;
-    set<vector<int>>s;
-    int dp[100][100][2];
-    for (auto i : puddles) {
-        s.insert(i);
+int vis[50] = { 0, };
+int comp(string a, string b) {
+    int n = a.length();
+    int count = 1;
+    for (int i = 0; i < n; i++) {
+        if (a[i] != b[i]) {
+            count--;
+        }
+        if (count < 0) {
+            return 0;
+        }
     }
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= m; j++) {
-            if (i == 1 && j == 1) {
-                dp[i][j][0] = 0;
-                dp[i][j][1] = 1;
-                continue;
-            }
-            dp[i][j][0] = n * m;
-            dp[i][j][1] = 0;
-            int x = j;
-            int y = i - 1;
-            if (x > 0 && y > 0 && !s.count({ x,y })) {
-                dp[i][j][0] = dp[y][x][0] + 1;
-                dp[i][j][1] = dp[y][x][1];
-            }
-            x = j - 1;
-            y = i;
-            if (x > 0 && y > 0 && !s.count({ x,y })) {
-                if (dp[i][j][0] == dp[y][x][0] + 1) {
-                    dp[i][j][1] = (dp[i][j][1] + dp[y][x][1]) % 1000000007;
-                }
-                if (dp[i][j][0] > dp[y][x][0] + 1) {
-                    dp[i][j][0] = dp[y][x][0] + 1;
-                    dp[i][j][1] = dp[y][x][1];
+    return 1;
+}
+int bfs(string begin,string target,vector<string> words) {
+    queue<pair<string, int>>que;
+    int n = words.size();
+    que.push({ begin,0 });
+    while (!que.empty()) {
+        pair<string, int>cur;
+        cur=que.front();
+        que.pop();
+        string str = cur.first;
+        int d = cur.second;
+        if (target == str) {
+            return d;
+        }
+        for (int i = 0; i < n; i++) {
+            if (vis[i] == 0) {
+                if (comp(str, words[i])) {
+                    que.push({ words[i],d + 1 });
+                    vis[i] = 1;
                 }
             }
         }
     }
-    return dp[n][m][1];
+    return 0;
+
+}
+
+int solution(string begin, string target, vector<string> words) {
+    int answer = 0;
+    answer = bfs(begin, target, words);
+    return answer;
 }
 int main() {
-    vector<vector<int>> v = {
-        {2,2}
+    vector<string> v = {
+   "hot", "dot", "dog", "lot", "log"
     };
-    cout<<solution(4,3,v);
+    cout<<solution("hit", "cog", v);
 }
