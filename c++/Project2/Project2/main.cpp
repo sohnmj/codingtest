@@ -1,80 +1,57 @@
+
+/*이 문제는 이분 탐색에서 무엇을 탐색할 것인지를 정하는 것이 핵심이다.
+탐색 대상은 바위를 제거한 뒤 유지할 수 있는 최소 거리이고,
+판단 기준은 그 최소 거리를 만족시키기 위해 제거한 바위의 개수이다.
+*/
 #include<iostream>
 #include <string>
 #include <vector>
-#include<map>
-#include<queue>
-#include<stack>
-#include<utility>
-#include<algorithm>
-#include<cmath>
-#include<set>
 #include <unordered_map>
-/*
-처음에는 위상 정렬을 생각했지만 누락된 순위 정보가 있기 때문에 별 도움이 안될 것 같아서 그냥 dfs를 이용했다. 
-인접 배열은 {A,B}일 때 A->B,A<-B인 총 2개의 인접 배열을 만들었디.
-각 선수마다 실력이 더좋은 선수들을 세는 
-dfs, 실력이 더 안좋은 선수들을 세는 dfs를 총 2번의 dfs를 통해 순위가 확정되는지 확인하였다.
-찾아보니 플로이드 워샬 방식으로도 쉽게 풀 수 있었다.
-*/
+#include <algorithm>
 using namespace std;
-int vis[101] = { 0, };
-
-void dfs(int x, vector<int>* adj) {
-
-    for (auto i : adj[x]) {
-        if (vis[i] == 0) {
-            vis[i] = 1;
-            dfs(i, adj);
+int binanry_serch(vector<int>rocks,int distance,int n) {
+    int maximum = -1;
+    int st = 0;
+    int ls = distance;
+    int len = rocks.size();
+    while (st <= ls) {
+        int mid = (st + ls) / 2;
+        int re = 0;
+        int pre = 0;
+        int minimum = distance;
+        for (int i = 1; i < len; i++) {
+            int cur = rocks[i];
+            if (cur - pre < mid) {
+                re++;
+            }
+            else {
+                minimum = min(minimum, cur - pre);
+                pre = cur;
+            }
+        }
+        if (re <= n) {
+            maximum = max(minimum, maximum);
+            st = mid + 1;
+        }
+        else {
+            ls = mid - 1;
         }
     }
+    return maximum;
 }
-int solution(int n, vector<vector<int>> results) {
-
-    int answer = 0;
-    //인접선 세팅
-    vector<int>* adj;
-    vector<int>* adj1;
-    adj = new vector<int>[n + 1];
-    adj1 = new vector<int>[n + 1];
-    for (auto i : results) {
-        adj[i[0]].push_back(i[1]);
-        adj1[i[1]].push_back(i[0]);
-    }
-
-
-    for (int i = 1; i <= n; i++) {
-
-        //정방향
-        for (int j = 1; j <= 100; j++) {
-            vis[j] = 0;
-        }
-        int m = 0;
-        dfs(i, adj);
-        for (int j = 1; j <= 100; j++) {
-            if (vis[j] == 1) {
-                m++;
-            }
-        }
-        //역방향
-        for (int j = 1; j <= 100; j++) {
-            vis[j] = 0;
-        }
-        int m1 = 0;
-        dfs(i, adj1);
-        for (int j = 1; j <= 100; j++) {
-            if (vis[j] == 1) {
-                m1++;
-            }
-        }
-        if (m + m1 == n - 1) {
-            answer++;
-        }
-    }
-
-
+int solution(int distance, vector<int> rocks, int n) {
+    rocks.push_back(0);
+    rocks.push_back(distance);
+    sort(rocks.begin(), rocks.end());
+    int answer = binanry_serch(rocks,distance,n);
     return answer;
 }
 int main() {
-    vector<vector<int>> v = { {4, 3},{4, 2},{3, 2},{1, 2},{2, 5} };
-    cout<<solution( 5,v);
+    vector<int> v = {
+    2, 4, 6, 8, 10
+    };
+
+    cout<<solution(12,v,4);
+    
+
 }
