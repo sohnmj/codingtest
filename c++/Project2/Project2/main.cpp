@@ -9,41 +9,12 @@
 #include <unordered_map>
 #include <algorithm>
 using namespace std;
-int binanry_serch(vector<int>rocks,int distance,int n) {
-    int maximum = -1;
-    int st = 0;
-    int ls = distance;
-    int len = rocks.size();
-    while (st <= ls) {
-        int mid = (st + ls) / 2;
-        int re = 0;
-        int pre = 0;
-        int minimum = distance;
-        for (int i = 1; i < len; i++) {
-            int cur = rocks[i];
-            if (cur - pre < mid) {
-                re++;
-            }
-            else {
-                minimum = min(minimum, cur - pre);
-                pre = cur;
-            }
-        }
-        if (re <= n) {
-            maximum = max(minimum, maximum);
-            st = mid + 1;
-        }
-        else {
-            ls = mid - 1;
-        }
+int dir[8][2] = { {0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1} };
+int solution(vector<int> arrows) {
+    int answer = 0;
+    for (int i : arrows) {
+
     }
-    return maximum;
-}
-int solution(int distance, vector<int> rocks, int n) {
-    rocks.push_back(0);
-    rocks.push_back(distance);
-    sort(rocks.begin(), rocks.end());
-    int answer = binanry_serch(rocks,distance,n);
     return answer;
 }
 int main() {
