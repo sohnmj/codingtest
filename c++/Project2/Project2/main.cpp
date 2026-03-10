@@ -1,28 +1,77 @@
 
-/*이 문제는 이분 탐색에서 무엇을 탐색할 것인지를 정하는 것이 핵심이다.
-탐색 대상은 바위를 제거한 뒤 유지할 수 있는 최소 거리이고,
-판단 기준은 그 최소 거리를 만족시키기 위해 제거한 바위의 개수이다.
+/*
+다음에는 문제 잘 읽고 변수들의 경계값 설정을 꼼꼼하게 확인하겠다.
 */
 #include<iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include<queue>
 using namespace std;
-int dir[8][2] = { {0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1} };
-int solution(vector<int> arrows) {
-    int answer = 0;
-    for (int i : arrows) {
+int adj[51][51];
+int dist[51] = { 0, };
+int n;
+void da() {
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({ 0,1 });
+    while (!pq.empty()) {
+        pair<int, int>cur = pq.top();
+        pq.pop();
+        int node = cur.second;
+        int d = cur.first;
+        if (dist[node] < d) continue;
 
+        for (int i = 1; i <= n; i++) {
+            if (adj[node][i] != 10001 && dist[i] > d + adj[node][i]) {
+                dist[i] = d + adj[node][i];
+                pq.push({ dist[i], i });
+            }
+        }
     }
+
+}
+int solution(int N, vector<vector<int> > road, int K) {
+    n = N;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (i == j) continue;
+            adj[i][j] = 10001;
+        }
+    }
+    int answer = 0;
+
+    for (auto r : road) {
+        int a = r[0], b = r[1], c = r[2];
+        if (adj[a][b] > c) {
+            adj[a][b] = c;
+            adj[b][a] = c;
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        dist[i] = 500001;
+    }
+    dist[1] = 0;
+    da();
+    for (int i = 1; i <= n; i++) {
+        if (dist[i] <= K) {
+            answer++;
+        }
+    }
+
     return answer;
 }
 int main() {
-    vector<int> v = {
-    2, 4, 6, 8, 10
+    std::vector<std::vector<int>> vectors = {
+            {1, 2, 1},
+            {2, 3, 3},
+            {5, 2, 2},
+            {1, 4, 2},
+            {5, 3, 1},
+            {5, 4, 2}
     };
 
-    cout<<solution(12,v,4);
+    cout<<solution(2,vectors,0);
     
 
 }
