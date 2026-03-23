@@ -40,7 +40,7 @@ void match() {
         while (j > 0 && T[i] != P[j]) {
             j = pf[j - 1];
         }
-        if (T[i] == P[j]) {
+        if (T[i] == P[j]) { 
             j++;
         }
         if (j == lenp) {
