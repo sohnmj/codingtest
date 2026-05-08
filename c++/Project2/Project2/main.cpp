@@ -1,6 +1,9 @@
 
 /*
-다음에는 문제 잘 읽고 변수들의 경계값 설정을 꼼꼼하게 확인하겠다.
+처음에는 그리디 문제인줄 알았는데 현재의 최선의 선택이 미래의 최선의 선택이 아닐 수 있다라는 것을 알게 되었다.
+그후 브루트 포스를 하기에는 2의 40승을 계산해야되서 해결방법을 찾던와중 
+배낭 문제 풀이를 알게 되었다.
+B의 흔적을 무게라고 하고 A의 흔적을 가치라고 가정하고 푸는 dp문제였다.
 */
 #include<iostream>
 #include <string>
@@ -9,69 +12,25 @@
 #include <algorithm>
 #include<queue>
 using namespace std;
-int adj[51][51];
-int dist[51] = { 0, };
-int n;
-void da() {
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push({ 0,1 });
-    while (!pq.empty()) {
-        pair<int, int>cur = pq.top();
-        pq.pop();
-        int node = cur.second;
-        int d = cur.first;
-        if (dist[node] < d) continue;
+int bag[120];
 
-        for (int i = 1; i <= n; i++) {
-            if (adj[node][i] != 10001 && dist[i] > d + adj[node][i]) {
-                dist[i] = d + adj[node][i];
-                pq.push({ dist[i], i });
-            }
+int solution(vector<vector<int>> info, int n, int m) {
+    int sum=0;
+    for (auto information : info) {
+        int v = information[0],w=information[1];
+        sum += v;
+        for (int j = m - 1;j >= w;j--) {
+            bag[j] = max(bag[j], bag[j - w] + v);
         }
     }
-
-}
-int solution(int N, vector<vector<int> > road, int K) {
-    n = N;
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= n; j++) {
-            if (i == j) continue;
-            adj[i][j] = 10001;
-        }
-    }
-    int answer = 0;
-
-    for (auto r : road) {
-        int a = r[0], b = r[1], c = r[2];
-        if (adj[a][b] > c) {
-            adj[a][b] = c;
-            adj[b][a] = c;
-        }
-    }
-    for (int i = 1; i <= n; i++) {
-        dist[i] = 500001;
-    }
-    dist[1] = 0;
-    da();
-    for (int i = 1; i <= n; i++) {
-        if (dist[i] <= K) {
-            answer++;
-        }
-    }
-
-    return answer;
+    sum -= bag[m - 1];
+    if(sum<n)return sum;
+    return -1;
 }
 int main() {
-    std::vector<std::vector<int>> vectors = {
-            {1, 2, 1},
-            {2, 3, 3},
-            {5, 2, 2},
-            {1, 4, 2},
-            {5, 3, 1},
-            {5, 4, 2}
-    };
+    std::vector<std::vector<int>> vectors = { {1, 2},{2, 3},{2, 1} };
 
-    cout<<solution(2,vectors,0);
+    cout<<solution(vectors,1,7);
     
 
 }
