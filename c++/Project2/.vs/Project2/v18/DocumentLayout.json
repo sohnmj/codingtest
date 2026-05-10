@@ -17,8 +17,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\\uAC1C\uBC1C\uC790\\codingtest\\c\u002B\u002B\\Project2\\Project2\\main.cpp",
+              "RelativeDocumentMoniker": "Project2\\main.cpp",
+              "ToolTip": "C:\\\uAC1C\uBC1C\uC790\\codingtest\\c\u002B\u002B\\Project2\\Project2\\main.cpp",
+              "RelativeToolTip": "Project2\\main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-07T23:56:22.159Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -29,21 +42,7 @@
               "RelativeToolTip": "..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Microsoft\\VC\\v180\\Microsoft.CppBuild.targets",
               "ViewState": "AgIAAMoBAAAAAAAAAADwv9gBAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2026-05-08T00:22:26.725Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "main.cpp",
-              "DocumentMoniker": "C:\\\uAC1C\uBC1C\uC790\\codingtest\\c\u002B\u002B\\Project2\\Project2\\main.cpp",
-              "RelativeDocumentMoniker": "Project2\\main.cpp",
-              "ToolTip": "C:\\\uAC1C\uBC1C\uC790\\codingtest\\c\u002B\u002B\\Project2\\Project2\\main.cpp",
-              "RelativeToolTip": "Project2\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-05-07T23:56:22.159Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-08T00:22:26.725Z"
             }
           ]
         }

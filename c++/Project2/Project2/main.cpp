@@ -1,9 +1,6 @@
 
 /*
-처음에는 그리디 문제인줄 알았는데 현재의 최선의 선택이 미래의 최선의 선택이 아닐 수 있다라는 것을 알게 되었다.
-그후 브루트 포스를 하기에는 2의 40승을 계산해야되서 해결방법을 찾던와중 
-배낭 문제 풀이를 알게 되었다.
-B의 흔적을 무게라고 하고 A의 흔적을 가치라고 가정하고 푸는 dp문제였다.
+그냥 구현문제
 */
 #include<iostream>
 #include <string>
@@ -12,25 +9,27 @@ B의 흔적을 무게라고 하고 A의 흔적을 가치라고 가정하고 푸는 dp문제였다.
 #include <algorithm>
 #include<queue>
 using namespace std;
-int bag[120];
-
-int solution(vector<vector<int>> info, int n, int m) {
-    int sum=0;
-    for (auto information : info) {
-        int v = information[0],w=information[1];
-        sum += v;
-        for (int j = m - 1;j >= w;j--) {
-            bag[j] = max(bag[j], bag[j - w] + v);
+int server[24];
+int solution(vector<int> players, int m, int k) {
+    int answer = 0;
+    for (int i = 0;i < 24;i++) {
+        int player = players[i];
+        if ((server[i] + 1) * m <= player) {
+            int plus_server = player / m - server[i];
+            answer += plus_server;
+            for (int j = 0;j < k;j++) {
+                if(i + j < 24) {
+                    server[i + j]+=plus_server;
+                }
+            }
         }
     }
-    sum -= bag[m - 1];
-    if(sum<n)return sum;
-    return -1;
+    return answer;
 }
 int main() {
-    std::vector<std::vector<int>> vectors = { {1, 2},{2, 3},{2, 1} };
+    std::vector<int>vectors = { 0, 2, 3, 3, 1, 2, 0, 0, 0, 0, 4, 2, 0, 6, 0, 4, 2, 13, 3, 5, 10, 0, 1, 5};
 
-    cout<<solution(vectors,1,7);
+    cout<<solution(vectors,3,5);
     
 
 }
