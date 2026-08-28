@@ -1,3 +1,4 @@
+//그냥 /쓰면 소수점으로 나누어져버린다. 정수로 나머지 없이 깔금하게 나눌려면 div를 쓰자
 --코드를 입력하세요
 SELECT P.price as PRICE_GROUP, count(*) as PRODUCTS
 from
