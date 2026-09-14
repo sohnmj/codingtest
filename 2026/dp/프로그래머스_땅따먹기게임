@@ -1,0 +1,63 @@
+
+/*
+문제 조건을 대충 읽었다. 100000인데 dfs로 풀려고하니 4^100000의 연산으로 시간초과 나버렸다.dfs의 탐색을 선택할때  깊이를 잘 고려해야겠다.
+dp문제로 깔끔하게 풀 수 있었다. 이전의 값이 현재의 값에 영향을 줄 수 있다면 dp를 고려하는게 좋은 거 같다.
+*/
+
+
+
+#include<iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <algorithm>
+#include<set>
+#include<deque>
+#include<cmath>
+typedef long long ll;
+using namespace std;
+int max_score = 0;
+void dfs(int pre_col, int row,int score, vector<vector<int>>& land) {
+    if (row == land.size()) {
+        if (score > max_score) {
+            max_score = score;
+        }
+    }
+    else {
+        for (int i = 0;i < 4;i++) {
+            if (pre_col == i) continue;
+            dfs(i, row + 1, score + land[row][i], land);
+        }
+    }
+}
+int solution(vector<vector<int> > land)
+{
+    int answer = 0;
+    vector<vector<int>>dp(land.size(), vector<int>(4, 0));
+    dp[0][0] = land[0][0], dp[0][1] = land[0][1], dp[0][2] = land[0][2], dp[0][3] = land[0][3];
+    for (int i = 1;i < land.size();i++) {
+        for (int j = 0;j < 4;j++) {
+            int max_score = 0;
+            for (int k = 0;k < 4;k++) {
+                if (j == k)continue;
+                if (max_score < dp[i - 1][k]) {
+                    max_score = dp[i - 1][k];
+                }
+            }
+            dp[i][j] = max_score + land[i][j];
+        }
+    }
+    for (int i = 0;i < 4;i++) {
+        if (answer < dp[land.size() - 1][i]) {
+            answer = dp[land.size() - 1][i];
+        }
+    }
+
+    return answer;
+}
+int main() {
+
+
+    solution(1, 10);
+}
