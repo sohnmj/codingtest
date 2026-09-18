@@ -1,0 +1,35 @@
+
+/*
+±»*/
+
+
+
+#include<iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <algorithm>
+#include<set>
+#include<deque>
+#include<cmath>
+typedef long long ll;
+using namespace std;
+int solution(int n) {
+    int answer = 0;
+    if (n % 2 > 0) {
+        return 0;
+    }
+    vector<ll>dp = { 1 ,0,3,0};
+    for (int i = 3;i <= n;i++) {
+        ll cnt = 0;
+        cnt += 3 * dp[i - 2];
+        int dif = 4;
+        while (i - dif >= 0) {
+            cnt += 2 * dp[i - dif];
+        }
+        dp.push_back(cnt);
+    }
+    answer = dp[n] % 1000000007;
+    return answer;
+}
