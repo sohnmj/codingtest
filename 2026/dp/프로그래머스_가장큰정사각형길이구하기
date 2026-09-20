@@ -1,0 +1,40 @@
+
+/*
+풀다가  일일이 탐색하는 것이 오래걸릴 거 같으면 dp나 그리디를 고려해보자 정사각형 최대 길이 구하는거는 이전의 결과를 이용할 수 있다
+그리고 경계값도 항상 확인
+*/
+#include<iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <algorithm>
+#include<set>
+#include<deque>
+#include<cmath>
+typedef long long ll;
+using namespace std;
+
+int solution(vector<vector<int>> board)
+{
+    int answer = 0;
+    int n = board.size();
+    int m = board[0].size();
+    for (int i = 0;i < n;i++) {
+        for (int j = 0;j < m;j++) {
+            if (i == 0 || j == 0) {
+                if (board[i][j] == 1) {
+                    answer = max(board[i][j], answer);
+                }
+                continue;
+            }
+            if (board[i][j] == 1) {
+                board[i][j] = min({ board[i - 1][j], board[i][j - 1], board[i - 1][j - 1] }) + 1;
+
+                answer = max(board[i][j], answer);
+            }
+        }
+    }
+
+    return answer * answer;
+}
