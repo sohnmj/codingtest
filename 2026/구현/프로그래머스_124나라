@@ -1,0 +1,47 @@
+/*
+ * [K진수 변환 핵심 정리]
+ *
+ * 1. 기본 메커니즘
+ *    - 1의 자리(낮은 자릿수)부터 추출됨: N % K 연산으로 나머지를 구해 문자로 누적
+ *    - 윗자리로 이동: N = N / K (몫으로 갱신)
+ *    - 낮은 자리부터 채워졌으므로 최종 문자열은 반드시 reverse() 필요
+ *
+ * 2. 분기: 0-based vs 1-based (0이 없는 진법)
+ *    - 표준 진법 (0 포함: 2진수, 16진수 등):
+ *      -> 별도 보정 없이 N % K, N /= K 진행
+ *    - 변형 진법 (0 미포함 / 1부터 시작: 124 나라, Excel 열 이름 등):
+ *      -> 매 루프 시작 시 반드시 'N -= 1' 수행!
+ *
+ * 3. 매 루프 'N -= 1'을 하는 이유
+ *    - 인덱스 일치: % K 결과(0 ~ K-1)와 1-based 숫자(1 ~ K)의 1 차이를 보정하여
+ *      digits[0 ~ K-1] 배열에 안전하게 직접 매핑
+ *    - 몫 자리 올림(Carry) 방지: K가 현재 자리의 최댓값이므로 윗자리로 불필요하게
+ *      올라가지 않도록 몫 계산 직전 크기를 하나 깎아줌
+ */
+#include<iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <algorithm>
+#include<set>
+#include<deque>
+#include<cmath>
+typedef long long ll;
+using namespace std;
+
+string solution(int n) {
+    string answer = "";
+    int arr[3] = { 1,2,4 };
+    while (1) {
+        if (n ==0) {
+            break;
+        }
+        n -= 1;
+        int idx = n % 3;
+        answer += arr[idx]+48;
+        n /= 3;
+    }
+    reverse(answer.begin(), answer.end());
+    return answer;
+}
