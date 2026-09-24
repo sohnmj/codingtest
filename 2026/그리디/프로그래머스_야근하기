@@ -1,0 +1,56 @@
+/*
+그리디 문제였고 내가 푼 방식은 works가 2개 이상의 원소가 있을때만 동작하는 풀이였다. 원소가 1개일 때도 고려했어야 했다..... 아마 두번째 pq.top()에서 에러가 났을 것이다.엣지 케이스에 신경쓰자
+ */
+#include<iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <algorithm>
+#include<set>
+#include<deque>
+#include<cmath>
+#include<queue>
+typedef long long ll;
+using namespace std;
+
+long long solution(int n, vector<int> works) {
+    long long answer = 0;
+    priority_queue<int>pq;
+    for (int work : works) {
+        pq.push(work);
+    }
+    while (n > 0) {
+        int max_work = pq.top();
+        if (max_work == 0) {
+            break;
+        }
+        pq.pop();
+        if (pq.empty()) {
+            max_work = max(0, max_work - n);
+            pq.push(max_work);
+            break;
+        }
+        int max_second_work = pq.top();
+        int dif = max_work - max_second_work;
+        if (dif == 0) {
+            pq.push(max_work - 1);
+            n--;
+            continue;
+        }
+        if (dif > n) {
+            pq.push(max_work - n);
+            n = 0;
+        }
+        else {
+            pq.push(max_second_work);
+            n -= dif;
+        }
+    }
+    while(!pq.empty()) {
+        int remain = pq.top();
+        pq.pop();
+        answer += remain * remain;
+    }
+    return answer;
+}
