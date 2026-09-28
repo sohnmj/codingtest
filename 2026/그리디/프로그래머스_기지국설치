@@ -1,0 +1,44 @@
+/*
+내가 푼방법은 그냥 조건 분기 많이해서 푼거 같다. 다른 코드를 보니 station기준으로 생각하여 푼거 같은데 참신한거 같고 실수도 덜했을 것 같다.
+ */
+#include<iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <algorithm>
+#include<set>
+#include<deque>
+#include<cmath>
+#include<queue>
+typedef long long ll;
+using namespace std;
+
+int solution(int n, vector<int> stations, int w)
+{
+    int answer = 0;
+    int st_idx = 0;
+    for (int i = 0;i < n;i++) {
+        int end = i + 2 * w;
+        int station=stations[st_idx]-1;
+        if (st_idx >= stations.size()) {
+            i = end;
+            answer++;
+        }
+        if (i >= station - w) {
+            st_idx++;
+            i = station + w;
+        }
+        else {
+            answer++;
+            if (end + 1 < station - w) {
+                
+            }
+            else {
+                i = station + w;
+            }
+        }
+    }
+
+    return answer;
+}
