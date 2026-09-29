@@ -1,0 +1,7 @@
+-- 조인 된 테이블을 접근할 때는 만약 겹치는 컬럼이름이 없다면 AILAS없이 그냥 접근해도 되지만 겹치는 이름이 있다면 테이블 이름이나 별칭을 사용해서 사용해야됨
+SELECT AI.NAME, AI.DATETIME
+FROM ANIMAL_INS AI LEFT JOIN
+ANIMAL_OUTS AO ON AI.ANIMAL_ID=AO.ANIMAL_ID
+WHERE AO.ANIMAL_ID IS  NULL
+ORDER BY AI.DATETIME
+LIMIT 3
