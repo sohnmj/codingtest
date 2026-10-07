@@ -1,0 +1,127 @@
+/*
+[오답노트] K Fire Station - K = 1
+
+
+■ 틀린 점 1. 인접 행렬 사용 → 메모리 초과
+- 조건을 보면 N이 최대 100,000인데, 아무 생각 없이 adj를 N*N으로 잡아서
+  100억 개의 원소를 저장하려다 터졌다. 시간도 정점마다 N개를 훑어서 O(N^2).
+- 트리는 간선이 N-1개뿐이므로 인접 리스트를 써야 한다.
+  vector<vector<pair<int, ll>>> adj;   // adj[u] = {(이웃, 가중치), ...}
+- 배열을 잡기 전에 "N이 최대일 때 원소가 몇 개인지" 먼저 계산해 볼 것.
+
+■ 틀린 점 2. 재귀 DFS → 반복문 BFS
+- DFS든 BFS든 트리에서는 경로가 하나뿐이라 거리가 똑같이 정확하게 나온다.
+- 하지만 재귀 DFS는 일자형 트리에서 깊이가 100,000까지 들어가 스택이 위험하다.
+- 둘 다 가능하면 반복문(queue BFS)으로 짜는 게 안전하다.
+  (재귀가 아닌 stack을 쓴 DFS도 괜찮다. 문제는 "재귀"였다.)
+
+*/
+#include <bits/stdc++.h>
+
+using namespace std;
+typedef long long ll;
+int N;
+
+vector<vector<pair<int, ll>>> adj;
+int bfs(int cur, vector<ll>& visited, vector<int>& par) {
+    visited.assign(N + 1, -1);
+    par.assign(N + 1, 0);
+    visited[cur] = 0;
+    int far = cur;
+    queue<int>que;
+    que.push(cur);
+    while (!que.empty()) {
+        int a = que.front();
+        que.pop();
+        for (auto [b, w] : adj[a]) {
+            if (visited[b] == -1) {
+                visited[b] = visited[a] + w;
+                if (visited[far] < visited[b]) {
+                    far = b;
+                }
+                par[b] = a;
+                que.push(b);
+            }
+        }
+    }
+    return far;
+}
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int K;
+    cin >> N >> K;
+    adj.assign(N + 1, vector<pair<int, ll>>());
+    for (int i = 0; i < N - 1; ++i) {
+        int U, V;
+        long long W;
+        cin >> U >> V >> W;
+        adj[U].push_back({ V,W });
+        adj[V].push_back({ U,W });
+    }
+    vector<ll>visited;
+    vector<int> par;
+    int A = bfs(1, visited, par);
+    int B = bfs(A, visited, par);
+    ll r = visited[B];
+    if (K == 1) {
+        cout << r;
+        return 0;
+    }
+
+    vector<int>path;
+    for (int v = B;v != A;v = par[v]) {
+        path.push_back(v);
+    }
+    path.push_back(A);
+    reverse(path.begin(), path.end());
+    int m = path.size() - 1;
+
+    vector<ll> pos(m + 1);
+    for (int k = 0;k <= m;k++) {
+        pos[k] = visited[path[k]];
+    }
+    vector<ll>depth(N + 1, -1);
+    vector<int>owner(N + 1, -1);
+    queue<int>que;
+    for (int k = 0;k <= m;k++) {
+        depth[path[k]] = 0;
+        owner[path[k]] = k;
+        que.push(path[k]);
+    }
+    vector<ll>h(m + 1, 0);
+
+    while (!que.empty()) {
+        int a = que.front();
+        que.pop();
+        for (auto [b, w] : adj[a]) {
+            if (depth[b] == -1) {
+                depth[b] = depth[a] + w;
+                owner[b] = owner[a];
+                h[owner[b]] = max(h[owner[b]], depth[b]);
+                que.push(b);
+            }
+        }
+    }
+    vector<ll>pre(m + 1);
+    vector<ll>suf(m + 1);
+    for (int k = 0;k <= m;k++) {
+        ll v = pos[k] + h[k];
+        pre[k] = (k == 0) ? v : max(pre[k - 1], v);
+    }
+    for (int k = m;k >= 0;k--) {
+        ll v = (r - pos[k]) + h[k];
+        suf[k] = (k == m) ? v : max(suf[k + 1], v);
+    }
+    ll ans = 0;
+    if (m >= 1) {
+        ans = LLONG_MAX;
+        for (int i = 0;i < m;i++) {
+            ans = min(ans, max(pre[i], suf[i + 1]));
+        }
+    }
+
+    cout << ans;
+    return 0;
+}
