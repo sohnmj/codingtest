@@ -1,0 +1,46 @@
+/*
+문제 조건 잘 읽자
+그리고 prioriy_queue에서 greater쓰면 min heap이 되고 아무것도 안쓰면 max heap이다.
+multiset도 있다.
+ */
+#include<iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <algorithm>
+#include<set>
+#include<deque>
+#include<cmath>
+#include<queue>
+typedef long long ll;
+using namespace std;
+int solution(vector<int> stones, int k) {
+    int answer = 0;
+    priority_queue<pair<int,int>,vector<pair<int,int>>>que;
+    int len = stones.size();
+    int min_max_stone=200000000;
+    for (int i = 0;i < len;i++) {
+         que.push({stones[i],i});
+         if (i >= k - 1) {
+             int max_n = 0;
+             while (1) {
+                 auto top_stone = que.top();
+                 int n = top_stone.first;
+                 int idx = top_stone.second;
+                 if (idx >= i - k + 1) {
+                     max_n = n;
+                     break;
+                 }
+                 else {
+                     que.pop();
+                 }
+             }
+             if (min_max_stone > max_n) {
+                 min_max_stone = max_n;
+             }
+         }
+        
+    }
+    return min_max_stone;
+}
