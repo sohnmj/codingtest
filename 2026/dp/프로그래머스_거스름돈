@@ -1,0 +1,33 @@
+/*
+1. 쉬운 케이스로 검증: 동전 {1}, n=2 → 정답 1 (2가 나오면 중복 의심)
+2. dp[i-c]에 이미 뭐가 들어 있나? → "c를 0번 이상 쓴 경우 전부"
+ → 이미 담긴 걸 while로 또 더하면 중복 (dp[i-c] 하나만 더하기)
+3. 루프 순서로 유형 구분
+  - 조합 (1+2 = 2+1): 바깥 동전, 안쪽 금액
+  - 순열 (1+2 ≠ 2+1): 바깥 금액, 안쪽 동전
+
+*/
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+int solution(int n, vector<int> money) {
+    int answer = 0;
+    sort(money.begin(),money.end());
+    vector<int>dp(n+1,0);
+    dp[0]=1;
+
+        for(auto change:money){
+            for(int i=1;i<=n;i++){
+                int remain=i-change;
+                if(remain>=0){
+                    dp[i]=(dp[i]+dp[remain])%1000000007;
+                    remain-=change;
+                }
+            }
+        }
+
+    return dp[n];
+}
