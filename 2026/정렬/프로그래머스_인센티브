@@ -1,0 +1,28 @@
+/*
+[로직] 근무태도 내림차순 정렬 후 동료평가 최댓값 maxB만 들고 가면, s[1] < maxB인 사람은 앞의 누군가에게 두 점수 모두 밀린 것
+[문법] sort 람다로 2기준 정렬(x[0] > y[0], 같으면 x[1] < y[1]) + 석차 = 1 + 합이 나보다 큰 사람 수 (동점·건너뛰기 자동 처리)
+[실수] max_gt·max_dp를 따로 들고 가서 "다른 두 사람"의 최댓값과 비교함. 지배 판정은 반드시 "한 사람"이 두 점수 모두 이겨야 함 → 한 축은 정렬로 고정할 것
+[엣지] 근무태도 같으면 서로 지배 불가 → 동료평가 오름차순이어야 같은 그룹이 maxB에 안 걸림. 정렬로 인덱스 0이 사라져 완호는 값(wa, wb)으로 찾음
+*/
+#include <bits/stdc++.h>
+using namespace std;
+
+int solution(vector<vector<int>> scores) {
+    int wa = scores[0][0], wb = scores[0][1], wsum = wa + wb;
+
+    sort(scores.begin(), scores.end(), [](const vector<int>& x, const vector<int>& y) {
+        if (x[0] != y[0]) return x[0] > y[0];
+        return x[1] < y[1];
+    });
+
+    int maxB = 0, rank = 1;
+    for (auto& s : scores) {
+        if (s[1] < maxB) {
+            if (s[0] == wa && s[1] == wb) return -1;
+            continue;
+        }
+        maxB = max(maxB, s[1]);
+        if (s[0] + s[1] > wsum) rank++;
+    }
+    return rank;
+}
