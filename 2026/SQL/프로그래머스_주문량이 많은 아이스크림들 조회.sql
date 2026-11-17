@@ -1,0 +1,17 @@
+
+/*
+[로직] JULY를 맛별 SUM한 서브쿼리 + FIRST_HALF를 FLAVOR로 조인, 합계 상위 3개
+[문법] FROM 절 서브쿼리는 별칭(J) 필수, JOIN USING(FLAVOR), ORDER BY에 식(합계) 직접 사용 + LIMIT 3
+[실수] SHIPMENT_ID로 조인 → 7월 추가 출하분이 빠져 오답. 조인 키는 PK/FK 설명 보고 정하기
+[엣지] JULY는 같은 맛이 여러 행(1:N) → 조인 전에 먼저 집계해야 FIRST_HALF 값 중복 합산 안 됨
+*/
+SELECT  J.FLAVOR
+FROM 
+(SELECT FLAVOR, SUM(TOTAL_ORDER) TOTAL_ORDER
+FROM JULY
+GROUP BY FLAVOR
+) J
+JOIN FIRST_HALF USING (FLAVOR)
+GROUP BY J.FLAVOR
+ORDER BY SUM(FIRST_HALF.TOTAL_ORDER)+J.TOTAL_ORDER DESC
+LIMIT 3
