@@ -1,0 +1,42 @@
+/*
+[로직] d,l,r,u 순 DFS + 가지치기(남은<거리, (남은-거리) 홀수면 컷). 통과한 방향은 왕복으로 항상 완주 가능 → 백트래킹 없이 while + if/else 그리디로도 풀림
+[문법] string& path로 하나를 공유하고 += 후 pop_back()으로 되돌리는 백트래킹 패턴
+[실수] 모든 경로를 다 돌며 answer>path로 비교 → 시간초과, 첫 정답에서 끊을 것. (rem-d)%2 괄호 누락(% 우선순위), k-path.size()는 size_t라 int로 캐스팅
+[엣지] rem==0까지 오면 거리도 0이라 도착 확인 불필요. k<d·홀짝 불일치는 solution에서 먼저 impossible
+*/
+#include <bits/stdc++.h>
+using namespace std;
+int dist(int a, int b){
+    return abs(a-b);
+}
+string answer="";
+vector<string>dr={"d","l","r","u"};
+int dt[4][2]={{1,0},{0,-1},{0,1},{-1,0}};
+void dfs(string& path,int n, int m, int x, int y, int r, int c, int k){
+    if(answer!="") return;
+    int rem=k-(int)path.size();
+    int d=dist(x,r)+dist(y,c);
+    if(rem<d||(rem-d)%2!=0) return;
+    if(rem==0){ answer=path; return; }
+
+    for(int i=0;i<4;i++){
+        int nx=x+dt[i][0],ny=y+dt[i][1];
+        if(nx<1||nx>n||ny<1||ny>m){
+            continue;
+        }
+        path+=dr[i];
+        dfs(path,n,m,nx,ny,r,c,k);
+        path.pop_back();
+        if(answer!="") return;
+    }
+}
+string solution(int n, int m, int x, int y, int r, int c, int k) {
+
+    int d=dist(x,r)+dist(y,c);
+    if(k<d||(k-d)%2!=0){
+        return "impossible";
+    }
+    string path="";
+    dfs(path,n,m,x,y,r,c,k);
+    return answer;
+}
